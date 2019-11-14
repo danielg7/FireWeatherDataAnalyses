@@ -1,6 +1,6 @@
 ---
 title: "Exercise 2 - Downloading Fire Weather Data"
-output: html_document
+output: rmarkdown::github_document
 ---
 
 # Objectives

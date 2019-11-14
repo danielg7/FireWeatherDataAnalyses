@@ -1,6 +1,6 @@
 ---
 title: "Exercise 1 - R Fire Weather Data Science"
-output: html_document
+output: rmarkdown::github_document
 ---
 
 ```{r setup, include=FALSE}
