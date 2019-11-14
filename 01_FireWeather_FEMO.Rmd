@@ -1,0 +1,149 @@
+---
+title: "Exercise 1 - R Fire Weather Data Science"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Applied Fire Data Science
+
+Playing with toy data is all well and good, but often we want to play with our own fire data and explore it.
+
+Objectives:
+
+* Load, clean, and plot our own fire weather data
+
+Let's first start with loading in some of the standard packages we will use later on:
+
+```{r packageLoading, message = FALSE, warning = FALSE}
+#install.packages("riem")
+#library("riem")
+#library("ggplot2")
+
+library("tidyverse")
+library("lubridate")
+```
+
+## Loading Data
+
+Let's load in data from a FEMO on the fictional Skunk Prescribed Fire. Hopefully, the results won't stink:
+
+```{r loadData, echo=TRUE}
+skunkData <- read.csv("Data/SkunkFireWxObs.csv")
+```
+
+Whenever we load in data, we want to look at it. There are a number of ways to do that.
+
+First, we can look at what the first couple of lines of the dataframe look like:
+```{r headData, echo=TRUE}
+head(skunkData)
+```
+
+Interesting. What kind of data types are there?
+
+```{r strData, echo=TRUE}
+str(skunkData)
+```
+
+We see a few things here. First, the "Date" column is misname. Let's rename it.
+
+First, let's look at the first column of the dataframe:
+
+```{r idData, echo=TRUE}
+names(skunkData)[1]
+```
+Great, that's definitely the offending column name. Let's fix it! How can we do that?
+
+```{r renameData, echo=TRUE}
+names(skunkData)[1] <- "Date"
+```
+
+Did it work? Let's check.
+
+```{r renameDataCheck, echo=TRUE}
+names(skunkData)
+```
+
+Awesome!
+
+## Very Important Dates
+
+For anyone that's fought with dates in Excel, you're in luck! Dates are easier to handle (but still tricky) in R.
+
+Look again at the `str(skunkData)`. What kind of variable is `Date`? What kind of variable is `Time`?
+
+What if we wanted to plot these points? We would need to combine the `Date` and `Time` columns into a new column, first. We'll need to use the `paste()` function to do that.
+
+Let's look up how to use that:
+
+```{r learnAboutPaste, echo = TRUE, eval = FALSE}
+?paste
+```
+
+Now that we know more about it, let's make a new column that combines `Date` and `Time`:
+
+```{r combineDateTime, echo = TRUE}
+skunkData$DateTime <- paste(skunkData$Date, skunkData$Time, sep = " ")
+
+head(skunkData)
+
+str(skunkData)
+```
+
+Great! Let's use a basic plotting function to look at our data.
+
+```{r basePlot, echo = TRUE, warning = TRUE, message = TRUE, error=TRUE}
+plot(skunkData$DateTime, skunkData$RH_Per)
+```
+
+Unfortunately, the data aren't in a time format that R recognizes and R is throwing a vague and somewhat unhelpful error. If you look above, DateTime is a `chr` object - character! To do convert them into dates, let's use the `lubridate` package.
+
+First, we'll need to install it and activate it:
+
+```{r installLubridate, echo = TRUE, eval=FALSE}
+install.packages("lubridate")
+
+library("lubridate")
+```
+
+
+There's a lot that lubridate can do, but one of the easiest helper functions allows you to take different formats of dates and times and convert them into formats that R can read. The commands follow the flow of the date/times:
+
+* `dmy()` = "Day / Month / Year"
+* `myd()` - "Month / Year / Day"
+* `ymd()` = "Year / Month / Day"
+* `ymd_hms()` = "Year / Month / Day / Hours / Minutes / Seconds"
+* `ymd_hm()` = "Year / Month / Day / Hours / Minutes"
+etc
+
+`lubridate` automagically parses any format that matches whatever combination your dates or date/times are in, whether there are spaces, slashes, or whatever in between.
+
+Let's use this to parse the DateTime column, making sure to define the timezone with the command "tz":
+
+```{r fixDateTime}
+skunkData$DateTime <- mdy_hm(skunkData$DateTime, tz = "MST")
+
+str(skunkData)
+```
+
+And now let's plot it again:
+
+```{r basePlotreDux, echo = TRUE, warning = TRUE, message = TRUE, error=TRUE}
+plot(skunkData$DateTime, skunkData$RH_Per)
+```
+
+
+Great! It works now!
+
+Let's save this file so that we can use it again:
+
+```{r save}
+write.csv(x = skunkData, file = "skunkData_dateAdded.csv",row.names = FALSE)
+```
+
+
+# Challenge
+
+* Plot temperature from the skunk fire data

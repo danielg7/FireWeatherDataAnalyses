@@ -1,0 +1,9 @@
+﻿Date,Time,Dry_F,Wet_F,RH_Per,WindSpeed_mph,CloudCover_Perc,FDFM_Unshaded,FDFM_Shade,POI_Unshaded,POI_Shaded,Location
+09/22/2018,1045,46,,40,3,1,,,,,DP10
+09/22/2018,1140,50,,43,7,1,,,,,DP10
+09/22/2018,1300,55,,20,5,1,,,,,DP10
+09/22/2018,1350,54,,18,4,1,,,,,DP20
+09/22/2018,1500,60,,10,3,1,,,,,Between DP20 and DP30
+09/22/2018,1530,65,,15,4,1,,,,,Between DP20 and DP30
+09/22/2018,1600,67,,18,3,1,,,,,Between DP30 and DP80
+09/22/2018,1700,70,,20,2,0,,,,,DP 100

@@ -1,0 +1,223 @@
+---
+title: "Exercise 2 - Downloading Fire Weather Data"
+output: html_document
+---
+
+# Objectives
+
+
+TODO:
+ 
+* Plot using basic plots with ggplot2
+* Download data from riem (install packages)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("riem")
+
+```
+
+## Turning on the libraries we will need:
+
+Let's turn on `ggplot2`
+
+```{r libraries}
+library("ggplot2")
+library("lubridate")
+```
+
+```{r reload}
+skunkData_reloaded <- read.csv("Data/skunkData_dateAdded.csv")
+skunkData_reloaded$DateTime <- ymd_hms(skunkData_reloaded$DateTime,tz = "MST")
+```
+
+## Plotting Your Data
+
+Now that we know a bit about plotting, let's plot our own data.
+
+Let's plot RH over time using lines:
+
+```{r lineRH}
+
+p <- ggplot(data = skunkData_reloaded, aes(x = DateTime, y = RH_Per))+
+  geom_line()
+
+p
+```
+
+Let's add points:
+
+```{r linePointRH}
+
+p + geom_point()
+```
+
+We can also change the color of points
+
+```{r linePointRHcolor}
+
+p + geom_point(color = "red")
+```
+
+or the shape...
+
+```{r linePointRHshape}
+
+p + geom_point(shape = 22)
+```
+
+We can also clean it up a little:
+
+
+```{r linePointRHNice}
+
+p + geom_point()+
+  xlab("Time")+
+  ylab("RH (%)")+
+  labs(title = "Skunk Fire Weather Observations",
+       subtitle = "This is a subtitle",
+       caption = "Source: Jane Q. Femo")+
+  theme_bw()
+```
+
+### Challenge
+
+* Plot temperature with ggplot2 against time
+* Change the point color to green
+* Change the point shape to a triangle (24)
+
+## Downloading new data
+
+### Installing riem
+
+Let's download some nearby weather observations and plot them alongside these data.
+
+First, let's download the `riem` R package, a wrapper for the Iowa Environmental Mesonet
+
+```{r installRIEM, echo = TRUE, eval = FALSE}
+install.packages("riem")
+library("riem")
+```
+
+Great! Hopefully no errors.
+
+### Downloading data
+
+We will use the `riem_measures` function, explained in documentation [here](http://ropensci.github.io/riem/reference/riem_measures.html).
+
+The closest NWS station to the Skunk Fire is FNL, so let's download the corresponding date:
+
+```{r useage, echo = TRUE, eval = TRUE}
+FCO <- riem_measures("FNL", date_start = "2018-09-22", date_end = "2018-09-24")
+```
+
+Great! Let's take a look at how the data are structured and plot it:
+
+```{r basePlot}
+str(FCO)
+head(FCO)
+
+plot(FCO$relh~FCO$valid)
+```
+
+Close readers may note that this is not a dataframe but a tibble. 
+
+Now let's overlay it with our data. How can we do that?
+
+```{r comparePlots}
+
+p2 <- ggplot()+
+  xlab("Date / Time")+
+  ylab("RH")+
+  geom_point(color = "black", data = FCO, aes(x = valid, y = relh))+
+  geom_point(color = "red", data = skunkData_reloaded, aes(x = DateTime, y = RH_Per))+
+  labs(title = "Skunk Fire Weather Observations",
+       subtitle = "This is a subtitle",
+       caption = "Source: Jane Q. Femo")+
+  theme_bw()
+
+p2
+```
+
+Uh oh, that looks weird. Maybe the time zones are off? Let's check it! And FIX IT!
+
+```{r timeFix}
+tz(FCO$valid)
+
+FCO$DateTime <- with_tz(FCO$valid, "MST")
+```
+
+Let's plot this again.
+
+
+```{r comparePlotsNewTZWhoDis}
+
+p2 <- ggplot()+
+  xlab("Date / Time")+
+  ylab("RH")+
+  geom_point(color = "black", data = FCO, aes(x = DateTime, y = relh))+
+  geom_point(color = "red", data = skunkData_reloaded, aes(x = DateTime, y = RH_Per))+
+  labs(title = "Skunk Fire Weather Observations",
+       subtitle = "This is a subtitle",
+       caption = "Source: Jane Q. Femo")+
+  theme_bw()
+
+p2
+```
+
+Cool!
+
+How can we make this look nicer, though?
+
+Let's use the package `cowplot`
+
+Go ahead and install it and switch the theme to `theme_cowplot()`
+
+```{r cowplotting}
+library(cowplot)
+
+p2 <- ggplot()+
+  xlab("Date / Time")+
+  ylab("RH (%)")+
+  geom_point(color = "black", data = FCO, aes(x = DateTime, y = relh))+
+  geom_point(color = "red", data = skunkData_reloaded, aes(x = DateTime, y = RH_Per))+
+  labs(title = "Skunk Fire Weather Observations",
+       subtitle = "This is a subtitle",
+       caption = "Source: Jane Q. Femo")+
+  theme_cowplot()
+
+p2
+```
+
+Looking good! Let's play with dates some more and fix the scale to just show one day. We will need to use the `scale_x_datetime` scale function, which takes values for limits.
+
+This is a bit advanced but with some good googling for "POSIXct", "ggplot2", and "scale_x_datetime", I bet you can find the answer...
+
+Stack Overflow to the rescue!
+
+```{r fixDate}
+p2 <- ggplot()+
+  xlab("Date / Time")+
+  ylab("RH (%)")+
+  scale_x_datetime(limits = ymd_h(c("2018-09-22 08", "2018-09-22 20"),tz = "MST"))+
+  geom_point(color = "black", data = FCO, aes(x = DateTime, y = relh))+
+  geom_point(color = "red", data = skunkData_reloaded, aes(x = DateTime, y = RH_Per))+
+  labs(title = "Skunk Fire Weather Observations",
+       caption = "Source: Jane Q. Femo")+
+  theme_cowplot()
+
+p2
+
+```
+
+Now we're cooking with gas. Let's save this using the `ggsave` function.
+
+```{r savingIt}
+ggsave(plot = p2, filename = "SkunkFireRH.png")
+```
+
+### Challenge
+
+* Plot the temperature from the Skunk Fire in green and the temperature (tmpf) of from the FCO airport data in red squares (shape 15)
+* Change the title of the plot to "Skunk Fire Weather: On-Site and Regional Comparison"
+* Save the plot as "SkunkFireTemperature.png"
