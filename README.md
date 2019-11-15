@@ -12,9 +12,15 @@ You’ll need R version 3.2.0 or higher. Download and install [R for Windows](ht
 Download and install the latest stable version of RStudio Desktop: [http://www.rstudio.com/products/rstudio/download/](http://www.rstudio.com/products/rstudio/download/)
 
 3. Launch RStudio (RStudio, not R itself). Ensure that you have internet access, then enter the following commands into the Console panel (usually the lower-left panel, by default). Note that these commands are case-sensitive. At any point, R may ask you if you want to update any old packages by asking Update all/some/none? [a/s/n]:. If you see this, type "a" at the prompt and hit Enter to update any old packages. If you are using a Windows machine you might get some errors about not having permission to modify the existing libraries – don’t worry about this message. You can avoid this error altogether by running RStudio as an administrator.
+
+Text to enter on the console:
+install.packages("tidyverse")
+install.packages("ggplot2")
+
 If you are asked at any point during the installations if you want to install developers tools or link to git, just hit "yes." If you run into other kinds of problems during installation, you can write to us with a screenshot of what your computer is showing you as an error, or come in 15 minutes in advance of your session, and we will try to help you. However, if you do not have administrator privileges on the computer you bring in, we may not be able to help you at that point. So please try to install this before you travel, especially if you are using a government computer.
 
 Good luck!
+            
 
 ## Learning objectives:
 
