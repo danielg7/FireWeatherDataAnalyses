@@ -1,0 +1,145 @@
+---
+title: "Exercise 03 - Basic Fire Weather Analyses"
+output: rmarkdown::github_document
+---
+
+# Objectives
+
+TODO:
+ 
+* Download two weather data sets
+* Graph distributions of data
+* Complete an anova
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+```
+
+## Turning on the libraries we will need:
+
+Let's turn on `ggplot2`, `cowplot`, `riem`, and `lubridate`
+
+```{r libraries, message=FALSE,warning=FALSE}
+library("ggplot2")
+library("lubridate")
+library("cowplot")
+library("riem")
+```
+
+## Downloading Weather Data
+
+Let's download weather data from two weather stations, one in Cortez, CO and one in Fort Collins.
+
+```{r downloadStations}
+FCO_2018 <- riem_measures("FNL", date_start = "2018-01-01", date_end = "2018-12-31")
+CEZ_2018 <- riem_measures("CEZ", date_start = "2018-01-01", date_end = "2018-12-31")
+```
+
+Let's plot the distribution of the temperatures. First, we'll need to fix the timezones (as before).
+
+```{r fixTZ}
+CEZ_2018$DateTime <- with_tz(CEZ_2018$valid, "MST")
+FCO_2018$DateTime <- with_tz(FCO_2018$valid, "MST")
+```
+
+Okay, let's plot the distribution of temperatures across the year:
+
+Let's use a new geom, geom_density, which displays a smooth histogram.
+
+```{r density1,message=FALSE,warning=FALSE}
+tempPlot <- ggplot()+
+  geom_density(data = FCO_2018, fill = "green", aes(x = tmpf))+
+  geom_density(data = CEZ_2018, fill = "gray50", aes(x = tmpf))+
+  theme_cowplot()
+tempPlot
+```
+That's a bit tough to read though, isn't it? Let's change the transparency using the "alpha" argument.
+```{r density2, message=F}
+tempPlot <- ggplot()+
+  geom_density(data = FCO_2018, fill = "green", alpha = .5, aes(x = tmpf))+
+  geom_density(data = CEZ_2018, fill = "gray50", alpha = .5, aes(x = tmpf))+
+  theme_cowplot()
+tempPlot
+```
+
+Much better.
+
+Let's look at it as boxplots.
+
+```{r boxplot1, message=F}
+tempPlot <- ggplot()+
+  coord_flip()+
+  geom_boxplot(data = FCO_2018, aes(x= "Fort Collins", y = tmpf))+
+  geom_boxplot(data = CEZ_2018, aes(x = "Cortez", y = tmpf))+
+  theme_cowplot()
+tempPlot
+```
+
+You'll see we did two new things there:
+1. We flipped the axes with "coord_flip"
+2. Instead of mapping the x axes to variables, we mapped them to static values "Fort Collins" and "Cortez"
+
+### Plotting Months
+
+Let's add a new column and use the `lubridate` command `month` to identify the months of each date.
+
+```{r months}
+CEZ_2018$Month <- month(CEZ_2018$DateTime, label = TRUE)
+FCO_2018$Month <- month(FCO_2018$DateTime, label = TRUE)
+```
+
+Now let's subset to JUST the July values. We'll use the `subset` function and assign the output to two new dataframes:
+
+```{r subset}
+CEZ_2018July <- subset(CEZ_2018, Month == "Jul")
+FCO_2018July <- subset(FCO_2018, Month == "Jul")
+```
+
+And plot it, including `geom_jitter`:
+
+```{r boxplot2, message=F}
+tempMonthPlot <- ggplot()+
+  coord_flip()+
+  geom_boxplot(data = FCO_2018July, fill = "red", aes(x = "Fort Collins", y = tmpf))+
+  geom_boxplot(data = CEZ_2018July, fill = "blue", aes(x = "Cortez", y = tmpf))+
+    geom_jitter(data = FCO_2018July, fill = "red", aes(x = "Fort Collins", y = tmpf))+
+  geom_jitter(data = CEZ_2018July, fill = "blue", aes(x = "Cortez", y = tmpf))+
+  theme_cowplot()
+tempMonthPlot
+```
+
+Nice!
+
+```{r density3, message=F}
+tempMonthPlot <- ggplot()+
+  geom_density(data = FCO_2018July, fill = "green", alpha = .5, aes(x = tmpf))+
+  geom_density(data = CEZ_2018July, fill = "gray50", alpha = .5, aes(x = tmpf))+
+  theme_cowplot()
+tempMonthPlot
+```
+
+### Challenge
+
+* Create two dataframes that have February weather for Cortez and Fort Collins.
+* Plot the distributions using geom_density of February weather. Change the transparency to .75 and the colors to black and red.
+
+## Analyses
+
+```{r plotWx}
+windWxPlot <- ggplot(data = CEZ_2018July, aes(x = tmpf, y = relh))+
+  geom_point()
+windWxPlot
+```
+```{r linearModel}
+tempRH <- lm(data = CEZ_2018July, formula = relh~tmpf)
+summary(tempRH)
+```
+
+```{r plotWx_model}
+windWxPlot <- ggplot(data = CEZ_2018July, aes(x = tmpf, y = relh))+
+  geom_point()+
+  geom_smooth(method = "lm")
+windWxPlot
+```
