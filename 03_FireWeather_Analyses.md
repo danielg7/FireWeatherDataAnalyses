@@ -151,6 +151,8 @@ tempMonthPlot
 Analyses
 --------
 
+Great! Let's plot just the temperature and relative humidity from July in Cortez:
+
 ``` r
 windWxPlot <- ggplot(data = CEZ_2018July, aes(x = tmpf, y = relh))+
   geom_point()
@@ -159,7 +161,7 @@ windWxPlot
 
     ## Warning: Removed 8902 rows containing missing values (geom_point).
 
-![](03_FireWeather_Analyses_files/figure-markdown_github/plotWx-1.png)
+![](03_FireWeather_Analyses_files/figure-markdown_github/plotWx-1.png) Looking good. Now let's fit a linear model to these data:
 
 ``` r
 tempRH <- lm(data = CEZ_2018July, formula = relh~tmpf)
@@ -186,6 +188,23 @@ summary(tempRH)
     ## Multiple R-squared:  0.6397, Adjusted R-squared:  0.6393 
     ## F-statistic:  1479 on 1 and 833 DF,  p-value: < 2.2e-16
 
+We should also do an anova on the fitted model:
+
+``` r
+anova(tempRH)
+```
+
+    ## Analysis of Variance Table
+    ## 
+    ## Response: relh
+    ##            Df Sum Sq Mean Sq F value    Pr(>F)    
+    ## tmpf        1 213858  213858    1479 < 2.2e-16 ***
+    ## Residuals 833 120452     145                      
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+ggplot2 can also display some models using geom\_smooth with method="lm". It will default to y~x as a format, which is what we used.
+
 ``` r
 windWxPlot <- ggplot(data = CEZ_2018July, aes(x = tmpf, y = relh))+
   geom_point()+
@@ -198,3 +217,9 @@ windWxPlot
     ## Warning: Removed 8902 rows containing missing values (geom_point).
 
 ![](03_FireWeather_Analyses_files/figure-markdown_github/plotWx_model-1.png)
+
+### Challenge
+
+-   Subset the Fort Collins data to just January
+-   Plot the relationship between temperature and windspeed (sknt)
+-   Fit a linear model to the relationship of temperature and relative humidity in Fort Collins in January

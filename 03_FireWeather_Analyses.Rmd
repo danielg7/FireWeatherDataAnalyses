@@ -127,15 +127,27 @@ tempMonthPlot
 
 ## Analyses
 
+Great! Let's plot just the temperature and relative humidity from July in Cortez:
+
 ```{r plotWx}
 windWxPlot <- ggplot(data = CEZ_2018July, aes(x = tmpf, y = relh))+
   geom_point()
 windWxPlot
 ```
+Looking good. Now let's fit a linear model to these data:
+
 ```{r linearModel}
 tempRH <- lm(data = CEZ_2018July, formula = relh~tmpf)
 summary(tempRH)
 ```
+
+We should also do an anova on the fitted model:
+
+```{r anovaLinearModel}
+anova(tempRH)
+```
+
+ggplot2 can also display some models using geom_smooth with method="lm". It will default to y~x as a format, which is what we used.
 
 ```{r plotWx_model}
 windWxPlot <- ggplot(data = CEZ_2018July, aes(x = tmpf, y = relh))+
@@ -143,3 +155,10 @@ windWxPlot <- ggplot(data = CEZ_2018July, aes(x = tmpf, y = relh))+
   geom_smooth(method = "lm")
 windWxPlot
 ```
+
+### Challenge
+
+* Subset the Fort Collins data to just January
+* Plot the relationship between temperature and windspeed (sknt)
+* Fit a linear model to the relationship of temperature and relative humidity in Fort Collins in January 
+
