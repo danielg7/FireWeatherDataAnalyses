@@ -4,15 +4,13 @@ Exercise 2 - Downloading Fire Weather Data
 Objectives
 ==========
 
-TODO:
-
 -   Plot using basic plots with ggplot2
 -   Download data from riem (install packages)
 
 Turning on the libraries we will need:
 --------------------------------------
 
-Let's turn on `ggplot2`
+Let's load the `ggplot2` library.
 
 ``` r
 library("ggplot2")
@@ -25,6 +23,8 @@ library("lubridate")
     ## The following object is masked from 'package:base':
     ## 
     ##     date
+
+...and load in your Skunk Fire data that you saved before. Also, fix the dates with `lubridate`, as before.
 
 ``` r
 skunkData_reloaded <- read.csv("Data/skunkData_dateAdded.csv")
@@ -312,3 +312,11 @@ ggsave(plot = p2, filename = "SkunkFireRH.png")
 -   Plot the temperature from the Skunk Fire in green and the temperature (tmpf) of from the FCO airport data in red squares (shape 15)
 -   Change the title of the plot to "Skunk Fire Weather: On-Site and Regional Comparison"
 -   Save the plot as "SkunkFireTemperature.png"
+
+Things To Remember
+==================
+
+-   Plotting with ggplot2
+-   Downloading data with `riem` and visualizing it
+-   Plotting two different data types with ggplot2
+-   Saving plots with `ggsave()`

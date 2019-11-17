@@ -238,3 +238,11 @@ Challenge
 =========
 
 -   Plot temperature from the skunk fire data
+
+Things To Remember
+==================
+
+-   Downloading and reading in text files
+-   Examining data structures, data types, and column names for irregularities that can occur
+-   Using `lubridate` for parsing date and time structures into a format that R likes and can process
+-   Using base R `plot` commands for simple data visualization
