@@ -109,7 +109,7 @@ p+
 
 Let's download some nearby weather observations and plot them alongside these data.
 
-First, let's download the `riem` R package, a wrapper for the Iowa Environmental Mesonet
+First, let's download the `riem` R package, a wrapper for the Iowa Environmental Mesonet. It's a package that allows you to download weather data from National Weather Service Automated Surface Observing System (ASOS) stations. Basically, these are associated with airports. 
 
 ```{r installRIEM, echo = TRUE, eval = FALSE}
 install.packages("riem")
@@ -122,7 +122,7 @@ Great! Hopefully no errors.
 
 We will use the `riem_measures` function, explained in documentation [here](http://ropensci.github.io/riem/reference/riem_measures.html).
 
-The closest NWS station to the Skunk Fire is FNL, so let's download the corresponding date:
+The closest ASOS station to the Skunk Fire is FNL, so let's download the corresponding date:
 
 ```{r useage, echo = TRUE, eval = TRUE}
 FCO <- riem_measures("FNL", date_start = "2018-09-22", date_end = "2018-09-24")
@@ -186,7 +186,8 @@ Cool!
 
 How can we make this look nicer, though?
 
-Let's use the package `cowplot`
+Let's use the package `cowplot`, which is a wrapper for `ggplot2` that improves some of the plotting functions. 
+`cowplot` can do all kinds of nifty things. Check out the vignettes [here](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html).
 
 Go ahead and install it and switch the theme to `theme_cowplot()`
 
@@ -226,6 +227,7 @@ p2 <- ggplot()+
 p2
 
 ```
+
 
 Now we're cooking with gas. Let's save this using the `ggsave` function.
 
