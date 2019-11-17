@@ -39,18 +39,30 @@ Now that we know a bit about plotting, let's plot our own data.
 Let's plot RH over time using lines:
 
 ``` r
-p <- ggplot(data = skunkData_reloaded, aes(x = DateTime, y = RH_Per))+
+p <- ggplot(data = skunkData_reloaded, aes(x = DateTime, y = RH_Per))
+p+
   geom_line()
-
-p
 ```
 
 ![](02_FireWeather_DownloadAndGraph_files/figure-markdown_github/lineRH-1.png)
 
+Let's change the thickness of the line:
+
+``` r
+p+
+  geom_line(size = 3)
+```
+
+![](02_FireWeather_DownloadAndGraph_files/figure-markdown_github/lineRH_bigLine-1.png)
+
+Hmm. That's a bit too big. Let's go back to the default.
+
 Let's add points:
 
 ``` r
-p + geom_point()
+p+
+  geom_line()+
+  geom_point()
 ```
 
 ![](02_FireWeather_DownloadAndGraph_files/figure-markdown_github/linePointRH-1.png)
@@ -58,15 +70,19 @@ p + geom_point()
 We can also change the color of points
 
 ``` r
-p + geom_point(color = "red")
+p+
+  geom_line()+
+  geom_point(color = "red")
 ```
 
 ![](02_FireWeather_DownloadAndGraph_files/figure-markdown_github/linePointRHcolor-1.png)
 
-or the shape...
+or the shape and size (try googling for "r shape" for ggplot2 point shape references)...
 
 ``` r
-p + geom_point(shape = 22)
+p+
+  geom_line()+
+  geom_point(shape = 22, size = 3, color = "blue")
 ```
 
 ![](02_FireWeather_DownloadAndGraph_files/figure-markdown_github/linePointRHshape-1.png)
@@ -74,7 +90,9 @@ p + geom_point(shape = 22)
 We can also clean it up a little:
 
 ``` r
-p + geom_point()+
+p+
+  geom_line()+
+  geom_point()+
   xlab("Time")+
   ylab("RH (%)")+
   labs(title = "Skunk Fire Weather Observations",
@@ -89,7 +107,7 @@ p + geom_point()+
 
 -   Plot temperature with ggplot2 against time
 -   Change the point color to green
--   Change the point shape to a triangle (24)
+-   Change the point shape to a triangle
 
 Downloading new data
 --------------------

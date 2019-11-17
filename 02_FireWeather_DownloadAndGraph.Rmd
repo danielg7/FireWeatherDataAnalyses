@@ -38,31 +38,47 @@ Let's plot RH over time using lines:
 
 ```{r lineRH}
 
-p <- ggplot(data = skunkData_reloaded, aes(x = DateTime, y = RH_Per))+
+p <- ggplot(data = skunkData_reloaded, aes(x = DateTime, y = RH_Per))
+p+
   geom_line()
-
-p
 ```
+
+Let's change the thickness of the line:
+
+```{r lineRH_bigLine}
+
+p+
+  geom_line(size = 3)
+
+```
+
+Hmm. That's a bit too big. Let's go back to the default.
 
 Let's add points:
 
 ```{r linePointRH}
 
-p + geom_point()
+p+
+  geom_line()+
+  geom_point()
 ```
 
 We can also change the color of points
 
 ```{r linePointRHcolor}
 
-p + geom_point(color = "red")
+p+
+  geom_line()+
+  geom_point(color = "red")
 ```
 
-or the shape...
+or the shape and size (try googling for "r shape" for ggplot2 point shape references)...
 
 ```{r linePointRHshape}
 
-p + geom_point(shape = 22)
+p+
+  geom_line()+
+  geom_point(shape = 22, size = 3, color = "blue")
 ```
 
 We can also clean it up a little:
@@ -70,7 +86,9 @@ We can also clean it up a little:
 
 ```{r linePointRHNice}
 
-p + geom_point()+
+p+
+  geom_line()+
+  geom_point()+
   xlab("Time")+
   ylab("RH (%)")+
   labs(title = "Skunk Fire Weather Observations",
@@ -83,7 +101,7 @@ p + geom_point()+
 
 * Plot temperature with ggplot2 against time
 * Change the point color to green
-* Change the point shape to a triangle (24)
+* Change the point shape to a triangle
 
 ## Downloading new data
 
