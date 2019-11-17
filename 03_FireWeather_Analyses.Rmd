@@ -5,10 +5,9 @@ output: rmarkdown::github_document
 
 # Objectives
 
-TODO:
- 
 * Download two weather data sets
 * Graph distributions of data
+* Complete a statistical test on our data
 * Complete an anova
 
 ```{r setup, include=FALSE}
@@ -40,8 +39,8 @@ CEZ_2018 <- riem_measures("CEZ", date_start = "2018-01-01", date_end = "2018-12-
 Let's plot the distribution of the temperatures. First, we'll need to fix the timezones (as before).
 
 ```{r fixTZ}
-CEZ_2018$DateTime <- with_tz(CEZ_2018$valid, "MST")
 FCO_2018$DateTime <- with_tz(FCO_2018$valid, "MST")
+CEZ_2018$DateTime <- with_tz(CEZ_2018$valid, "MST")
 ```
 
 Okay, let's plot the distribution of temperatures across the year:
@@ -49,19 +48,21 @@ Okay, let's plot the distribution of temperatures across the year:
 Let's use a new geom, geom_density, which displays a smooth histogram.
 
 ```{r density1,message=FALSE,warning=FALSE}
-tempPlot <- ggplot()+
+tempPlotDensity <- ggplot()+
   geom_density(data = FCO_2018, fill = "green", aes(x = tmpf))+
   geom_density(data = CEZ_2018, fill = "gray50", aes(x = tmpf))+
   theme_cowplot()
-tempPlot
+tempPlotDensity
 ```
+
 That's a bit tough to read though, isn't it? Let's change the transparency using the "alpha" argument.
+
 ```{r density2, message=F}
-tempPlot <- ggplot()+
+tempPlotDensity <- ggplot()+
   geom_density(data = FCO_2018, fill = "green", alpha = .5, aes(x = tmpf))+
   geom_density(data = CEZ_2018, fill = "gray50", alpha = .5, aes(x = tmpf))+
   theme_cowplot()
-tempPlot
+tempPlotDensity
 ```
 
 Much better.
@@ -69,16 +70,18 @@ Much better.
 Let's look at it as boxplots.
 
 ```{r boxplot1, message=F}
-tempPlot <- ggplot()+
+tempPlotBox <- ggplot()+
   coord_flip()+
   geom_boxplot(data = FCO_2018, aes(x= "Fort Collins", y = tmpf))+
   geom_boxplot(data = CEZ_2018, aes(x = "Cortez", y = tmpf))+
   theme_cowplot()
-tempPlot
+tempPlotBox
 ```
 
 You'll see we did two new things there:
+
 1. We flipped the axes with "coord_flip"
+
 2. Instead of mapping the x axes to variables, we mapped them to static values "Fort Collins" and "Cortez"
 
 ### Plotting Months
@@ -110,15 +113,19 @@ tempMonthPlot <- ggplot()+
 tempMonthPlot
 ```
 
-Nice!
+Nice! You may notice some changes in relative size in the plot. If you zoom in on it, these may change.
+
+Let's compare it to just the July density plots:
 
 ```{r density3, message=F}
-tempMonthPlot <- ggplot()+
+tempMonthPlotDensity <- ggplot()+
   geom_density(data = FCO_2018July, fill = "green", alpha = .5, aes(x = tmpf))+
   geom_density(data = CEZ_2018July, fill = "gray50", alpha = .5, aes(x = tmpf))+
   theme_cowplot()
-tempMonthPlot
+tempMonthPlotDensity
 ```
+
+Density plots can highlight differences in distributions that hard hard to see in boxplots or jittered points. 
 
 ### Challenge
 
@@ -127,6 +134,28 @@ tempMonthPlot
 
 ## Analyses
 
+### T-Test
+
+We'd like to perform a statistical test on the July temperature data. They look pretty similar.
+
+* What is our hypothesis?
+
+* What is our test?
+
+The correct test here might be the Welch's two-sampled t-test, that does not assume equal variances between samples. This is always a safe starting assumption.
+
+Let's do it:
+
+```{r}
+t.test(FCO_2018July$tmpf, CEZ_2018July$tmpf, 
+       alternative = "two.sided", 
+       var.equal = FALSE)
+```
+
+Interesting. How would we report these results?
+
+### Linear Model
+
 Great! Let's plot just the temperature and relative humidity from July in Cortez:
 
 ```{r plotWx}
@@ -134,6 +163,7 @@ windWxPlot <- ggplot(data = CEZ_2018July, aes(x = tmpf, y = relh))+
   geom_point()
 windWxPlot
 ```
+
 Looking good. Now let's fit a linear model to these data:
 
 ```{r linearModel}
@@ -141,24 +171,21 @@ tempRH <- lm(data = CEZ_2018July, formula = relh~tmpf)
 summary(tempRH)
 ```
 
-We should also do an anova on the fitted model:
-
-```{r anovaLinearModel}
-anova(tempRH)
-```
-
-ggplot2 can also display some models using geom_smooth with method="lm". It will default to y~x as a format, which is what we used.
+`ggplot2` can also display some models using geom_smooth with method="lm". It will default to y~x as a format, which is what we used.
 
 ```{r plotWx_model}
-windWxPlot <- ggplot(data = CEZ_2018July, aes(x = tmpf, y = relh))+
+tmpfrelhPlot <- ggplot(data = CEZ_2018July, aes(x = tmpf, y = relh))+
   geom_point()+
   geom_smooth(method = "lm")
-windWxPlot
+tmpfrelhPlot
 ```
 
 ### Challenge
 
-* Subset the Fort Collins data to just January
-* Plot the relationship between temperature and windspeed (sknt)
+* Subset the Fort Collins and Cortez data to just January
+* Complete a two-sampled t-test on the January temperature data for Fort Collins and Cortez
+* Plot the relationship between temperature and windspeed (sknt) in Fort Collins in 2018
 * Fit a linear model to the relationship of temperature and relative humidity in Fort Collins in January 
+
+
 
