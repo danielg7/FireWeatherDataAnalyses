@@ -64,7 +64,7 @@ str(skunkData)
     ##  $ POI_Shaded     : logi  NA NA NA NA NA NA ...
     ##  $ Location       : Factor w/ 5 levels "Between DP20 and DP30",..: 4 4 4 5 1 1 2 3
 
-We see a few things here. First, the "Date" column is misname. Let's rename it.
+We see a few things here. First, the "Date" column is misnamed on some computers (looking at you, some Windows machines!). Let's rename it. On Macs, this doesn't happen.
 
 First, let's look at the first column of the dataframe:
 
@@ -216,10 +216,12 @@ str(skunkData)
     ##  $ Location       : Factor w/ 5 levels "Between DP20 and DP30",..: 4 4 4 5 1 1 2 3
     ##  $ DateTime       : POSIXct, format: "2018-09-22 10:45:00" "2018-09-22 11:40:00" ...
 
-And now let's plot it again:
+And now let's plot it again, but this time adding the arguments `xlab` and `ylab`, for axis labels:
 
 ``` r
-plot(skunkData$DateTime, skunkData$RH_Per)
+plot(skunkData$DateTime, skunkData$RH_Per,
+     xlab = "Time (hours)",
+     ylab = "Relative Humidity (%)")
 ```
 
 ![](01_FireWeather_FEMO_files/figure-markdown_github/basePlotreDux-1.png)

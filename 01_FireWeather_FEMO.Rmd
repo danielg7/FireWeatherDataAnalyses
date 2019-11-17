@@ -10,7 +10,7 @@ library("lubridate")
 
 # Applied Fire Data Science
 
-Playing with toy data is all well and good, but often we want to play with our own fire data and explore it.
+Playing with toy data is all well and good, but often we want to play with our own fire data and explore it. 
 
 Objectives:
 
@@ -39,7 +39,7 @@ Interesting. What kind of data types are there?
 str(skunkData)
 ```
 
-We see a few things here. First, the "Date" column is misname. Let's rename it.
+We see a few things here. First, the "Date" column is misnamed on some computers (looking at you, some Windows machines!). Let's rename it. On Macs, this doesn't happen.
 
 First, let's look at the first column of the dataframe:
 
@@ -120,10 +120,12 @@ skunkData$DateTime <- mdy_hm(skunkData$DateTime, tz = "MST")
 str(skunkData)
 ```
 
-And now let's plot it again:
+And now let's plot it again, but this time adding the arguments `xlab` and `ylab`, for axis labels:
 
 ```{r basePlotreDux, echo = TRUE, warning = TRUE, message = TRUE, error=TRUE}
-plot(skunkData$DateTime, skunkData$RH_Per)
+plot(skunkData$DateTime, skunkData$RH_Per,
+     xlab = "Time (hours)",
+     ylab = "Relative Humidity (%)")
 ```
 
 
