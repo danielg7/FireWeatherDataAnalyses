@@ -229,7 +229,7 @@ p2
 ```
 
 
-Now we're cooking with gas. Let's save this using the `ggsave` function.
+Now we're cooking with gas. Let's save this using the `ggsave` function. There are many different arguments for `ggsave()` to change the size and format.
 
 ```{r savingIt}
 ggsave(plot = p2, filename = "SkunkFireRH.png")

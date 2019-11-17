@@ -315,7 +315,7 @@ p2
 
 ![](02_FireWeather_DownloadAndGraph_files/figure-markdown_github/fixDate-1.png)
 
-Now we're cooking with gas. Let's save this using the `ggsave` function.
+Now we're cooking with gas. Let's save this using the `ggsave` function. There are many different arguments for `ggsave()` to change the size and format.
 
 ``` r
 ggsave(plot = p2, filename = "SkunkFireRH.png")
