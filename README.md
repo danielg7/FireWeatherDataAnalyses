@@ -17,10 +17,30 @@ Text to enter on the console:
 install.packages("tidyverse")
 install.packages("ggplot2")
 
+(You may get an error about install R Tools. If so, install RTools! ("install.packages("RTools"))
+
 If you are asked at any point during the installations if you want to install developers tools or link to git, just hit "yes." If you run into other kinds of problems during installation, you can write to us with a screenshot of what your computer is showing you as an error, or come in 15 minutes in advance of your session, and we will try to help you. However, if you do not have administrator privileges on the computer you bring in, we may not be able to help you at that point. So please try to install this before you travel, especially if you are using a government computer.
 
 Good luck!
-            
+
+### Ground Rules
+
+* Be kind – to yourselves, to each other, and to the instructors
+* Be present and engaged
+* Be respectful of different viewpoints and experiences
+* Use welcoming and inclusive language
+* Gracefully accept and give constructive criticism
+
+[Incident response guide](https://docs.carpentries.org/topic_folders/policies/incident-response.html)
+
+### Process Notes
+
+* If you have a question, put up a RED sticky note
+* When you have completed a challenge, put up a GREEN sticky note
+* Use a RED sticky note for questions
+* Please sign in
+* At breaks, we will ask for one positive and one negative comment - this helps us get better!
+
 
 ## Learning objectives:
 
