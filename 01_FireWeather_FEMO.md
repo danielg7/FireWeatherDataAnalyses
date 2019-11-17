@@ -10,19 +10,10 @@ Objectives:
 
 -   Load, clean, and plot our own fire weather data
 
-Let's first start with loading in some of the standard packages we will use later on:
-
-``` r
-#install.packages("riem")
-#library("riem")
-#library("ggplot2")
-
-library("tidyverse")
-library("lubridate")
-```
-
 Loading Data
 ------------
+
+If you haven't downloaded the .csv for the SkunkFireWxObs.csv, get it [here](https://raw.githubusercontent.com/danielg7/FireWeatherDataAnalyses/master/Data/SkunkFireWxObs.csv) and put it in a 'Data' folder in your working directory.
 
 Let's load in data from a FEMO on the fictional Skunk Prescribed Fire. Hopefully, the results won't stink:
 
@@ -182,7 +173,7 @@ plot(skunkData$DateTime, skunkData$RH_Per)
 
 ![](01_FireWeather_FEMO_files/figure-markdown_github/basePlot-1.png)
 
-Unfortunately, the data aren't in a time format that R recognizes and R is throwing a vague and somewhat unhelpful error. If you look above, DateTime is a `chr` object - character! To do convert them into dates, let's use the `lubridate` package.
+Unfortunately, the data aren't in a time format that R recognizes and R is throwing a vague and somewhat unhelpful error (with gratuitous and obnoxious extra linebreaks, to boot!). If you look above, DateTime is a `chr` object - character! To do convert them into dates, let's use the `lubridate` package.
 
 First, we'll need to install it and activate it:
 
@@ -202,7 +193,7 @@ There's a lot that lubridate can do, but one of the easiest helper functions all
 
 `lubridate` automagically parses any format that matches whatever combination your dates or date/times are in, whether there are spaces, slashes, or whatever in between.
 
-Let's use this to parse the DateTime column, making sure to define the timezone with the command "tz":
+Let's use this to parse the DateTime column, making sure to define the timezone with the argument "tz":
 
 ``` r
 skunkData$DateTime <- mdy_hm(skunkData$DateTime, tz = "MST")

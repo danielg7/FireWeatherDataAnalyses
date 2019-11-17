@@ -41,7 +41,6 @@ Good luck!
 * Please sign in
 * At breaks, we will ask for one positive and one negative comment - this helps us get better!
 
-
 ## Learning objectives:
 
 ### Morning
